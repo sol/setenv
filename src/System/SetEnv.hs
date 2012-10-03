@@ -54,7 +54,7 @@ setEnv key value_
     --    removes that environment variable.  A subsequent call to
     --    GetEnvironmentVariable will then return 0, but GetLastError will not
     --    be updates, and hence may not return ERROR_ENVVAR_NOT_FOUND.  This is
-    --    at least true for observed this behavior with Windows XP SP 3.
+    --    at least true for Windows XP SP 3.
     value = takeWhile (/= '\NUL') value_
 
 setEnv_ :: String -> String -> IO ()
