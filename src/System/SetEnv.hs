@@ -31,12 +31,27 @@ eRROR_ENVVAR_NOT_FOUND = 203
 #endif
 
 -- | Set the contents of the specified environment variable.
+--
+-- If the given value is the empty string, the specified environment is remove
+-- from the environment instead.
 setEnv :: String -> String -> IO ()
-setEnv key_ value_
+setEnv key value_
   | null value = unsetEnv key
   | otherwise  = setEnv_ key value
   where
-    key   = key_ -- takeWhile (/= '\NUL') key_
+    -- NOTE: Anything that follows NUL is ignored on both POSIX and Windows.
+    -- We still strip it manually so that the null check above succeds if a
+    -- value starts with NUL, and `unsetEnv` is called.  This is important for
+    -- two reasons.
+    --
+    --  * On POSIX setting an environment variable to the empty string does not
+    --    remove it.
+    --
+    --  * On Windows setting an environment variable to the empty string
+    --    removes that environment variable.  A subsequent call to
+    --    GetEnvironmentVariable will then return 0, but GetLastError will not
+    --    be updates, and hence may not return ERROR_ENVVAR_NOT_FOUND.  This is
+    --    at least true for observed this behavior with Windows XP SP 3.
     value = takeWhile (/= '\NUL') value_
 
 setEnv_ :: String -> String -> IO ()
@@ -58,8 +73,8 @@ unsetEnv :: String -> IO ()
 unsetEnv key = withCWString key $ \k -> do
   success <- c_SetEnvironmentVariable k nullPtr
   unless success $ do
-    -- unsetting an environment variable that does not exist is not an error,
-    -- so we ignore eRROR_ENVVAR_NOT_FOUND
+    -- We consider unsetting an environment variable that does not exist not as
+    -- an error, hence we ignore eRROR_ENVVAR_NOT_FOUND.
     err <- c_GetLastError
     unless (err == eRROR_ENVVAR_NOT_FOUND) $ do
       throwGetLastError "unsetEnv"
