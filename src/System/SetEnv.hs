@@ -30,10 +30,13 @@ eRROR_ENVVAR_NOT_FOUND = 203
 
 #endif
 
--- | Set the contents of the specified environment variable.
+-- | @setEnv name value@ sets the specified environment variable to @value@.
 --
--- If the given value is the empty string, the specified environment is remove
--- from the environment instead.
+-- If @value@ is the empty string, the specified environment variable is
+-- removed from the environment.
+--
+-- Throws `Control.Exception.IOException` if @name@ is the empty string or
+-- contains an equals character.
 setEnv :: String -> String -> IO ()
 setEnv key value_
   | null value = unsetEnv key
@@ -66,8 +69,11 @@ foreign import WINDOWS_CCONV unsafe "windows.h SetEnvironmentVariableW"
 setEnv_ k v = Posix.setEnv k v True
 #endif
 
--- | Remove the specified environment variable from the environment of the
--- current process.
+-- | @unSet name@ removes the specified environment variable from the
+-- environment of the current process.
+--
+-- Throws `Control.Exception.IOException` if @name@ is the empty string or
+-- contains an equals character.
 unsetEnv :: String -> IO ()
 #ifdef mingw32_HOST_OS
 unsetEnv key = withCWString key $ \k -> do
