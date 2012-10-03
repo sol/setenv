@@ -52,9 +52,12 @@ setEnv key value_
     --
     --  * On Windows setting an environment variable to the empty string
     --    removes that environment variable.  A subsequent call to
-    --    GetEnvironmentVariable will then return 0, but GetLastError will not
-    --    be updates, and hence may not return ERROR_ENVVAR_NOT_FOUND.  This is
-    --    at least true for Windows XP SP 3.
+    --    GetEnvironmentVariable will then return 0, but the calling thread's
+    --    last-error code will not be updated, and hence a call to GetLastError
+    --    may not return ERROR_ENVVAR_NOT_FOUND.  The failed lookup will then
+    --    result in a random error instead of the expected
+    --    `isDoesNotExistError` (this is at least true for Windows XP, SP 3).
+    --    Explicitly calling `unsetEnv` prevents this.
     value = takeWhile (/= '\NUL') value_
 
 setEnv_ :: String -> String -> IO ()
