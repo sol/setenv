@@ -5,8 +5,15 @@ license-file:     LICENSE
 copyright:        (c) 2012 Simon Hengel
 author:           Simon Hengel <sol@typeful.net>
 maintainer:       Simon Hengel <sol@typeful.net>
+category:         System
+synopsis:         A cross-platform library for setting environment variables
+description:      A cross-platform library for setting environment variables
 build-type:       Simple
 cabal-version:    >= 1.8
+
+source-repository head
+  type: git
+  location: https://github.com/sol/setenv
 
 library
   ghc-options:
@@ -16,7 +23,7 @@ library
   exposed-modules:
       System.SetEnv
   build-depends:
-      base
+      base == 4.*
   if !os(windows)
     build-depends: unix
 
