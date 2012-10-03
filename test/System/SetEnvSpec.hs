@@ -79,6 +79,10 @@ spec = do
       r <- getEnv "FOO"
       return (r == v)
 
+    it "works for unicode keys" $ do
+      setEnv "foo-\955-bar" "foo"
+      getEnv "foo-\955-bar" `shouldReturn` "foo"
+
     it "throws an exception if key is the empty string" $ do
       setEnv "" "foo" `shouldThrow` (== InvalidArgument) . ioeGetErrorType
 
