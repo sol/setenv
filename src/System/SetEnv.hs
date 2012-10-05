@@ -36,7 +36,7 @@ eRROR_ENVVAR_NOT_FOUND = 203
 -- removed from the environment.
 --
 -- Throws `Control.Exception.IOException` if @name@ is the empty string or
--- contains an equals character.
+-- contains an equals sign.
 setEnv :: String -> String -> IO ()
 setEnv key value_
   | null value = unsetEnv key
@@ -76,7 +76,7 @@ setEnv_ k v = Posix.setEnv k v True
 -- environment of the current process.
 --
 -- Throws `Control.Exception.IOException` if @name@ is the empty string or
--- contains an equals character.
+-- contains an equals sign.
 unsetEnv :: String -> IO ()
 #ifdef mingw32_HOST_OS
 unsetEnv key = withCWString key $ \k -> do
