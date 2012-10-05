@@ -32,8 +32,23 @@ eRROR_ENVVAR_NOT_FOUND = 203
 
 -- | @setEnv name value@ sets the specified environment variable to @value@.
 --
--- If @value@ is the empty string, the specified environment variable is
--- removed from the environment.
+-- On Windows setting an environment variable to the /empty string/ removes
+-- that environment variable from the environment.  For the sake of
+-- compatibility we adopt that behavior.  In particular
+--
+-- @
+-- setEnv name \"\"
+-- @
+--
+-- has the same effect as
+--
+-- @
+-- `unsetEnv` name
+-- @
+--
+-- If you don't care about Windows support and want to set an environment
+-- variable to the empty string use @System.Posix.Env.setEnv@ from the @unix@
+-- package instead.
 --
 -- Throws `Control.Exception.IOException` if @name@ is the empty string or
 -- contains an equals sign.
