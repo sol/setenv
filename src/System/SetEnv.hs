@@ -4,6 +4,12 @@ module System.SetEnv (
 , unsetEnv
 ) where
 
+#if MIN_VERSION_base(4,7,0)
+
+import System.Environment (setEnv, unsetEnv)
+
+#else
+
 #ifdef mingw32_HOST_OS
 import GHC.Windows
 import Foreign.Safe
@@ -104,4 +110,6 @@ unsetEnv key = withCWString key $ \k -> do
       throwGetLastError "unsetEnv"
 #else
 unsetEnv = Posix.unsetEnv
+#endif
+
 #endif
