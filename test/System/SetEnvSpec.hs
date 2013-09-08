@@ -2,9 +2,7 @@ module System.SetEnvSpec (main, spec) where
 
 import           Test.Hspec
 import           Test.QuickCheck
-import           Test.QuickCheck.Property
 
-import qualified Control.Exception as E
 import           System.IO.Error
 import           GHC.IO.Exception (IOErrorType (InvalidArgument))
 import           System.SetEnv
@@ -32,10 +30,11 @@ spec = do
     it "throws an exception if key contains '='" $ do
       unsetEnv "some=key" `shouldThrow` (== InvalidArgument) . ioeGetErrorType
 
-    it "works for arbitrary keys" $ property $ \k -> ('\NUL' `notElem` k && '=' `notElem` k && (not . null) k) ==> morallyDubiousIOProperty $ do
-      setEnv k "foo"
-      unsetEnv k
-      (getEnv k >> return False) `E.catch` (return . isDoesNotExistError)
+    it "works for arbitrary keys" $
+      property $ \k -> ('\NUL' `notElem` k && '=' `notElem` k && (not . null) k) ==> do
+        setEnv k "foo"
+        unsetEnv k
+        getEnv k `shouldThrow` isDoesNotExistError
 
   describe "setEnv" $ do
     it "sets specified environment variable to given value" $ do
@@ -74,10 +73,10 @@ spec = do
       setEnv "FOO" "foo-\955-bar"
       getEnv "FOO" `shouldReturn` "foo-\955-bar"
 
-    it "works for arbitrary values" $ property $ \v -> ('\NUL' `notElem` v && (not . null) v) ==> morallyDubiousIOProperty $ do
-      setEnv "FOO" v
-      r <- getEnv "FOO"
-      return (r == v)
+    it "works for arbitrary values" $
+      property $ \v -> ('\NUL' `notElem` v && (not . null) v) ==> do
+        setEnv "FOO" v
+        getEnv "FOO" `shouldReturn` v
 
     it "works for unicode keys" $ do
       setEnv "foo-\955-bar" "foo"
@@ -89,7 +88,7 @@ spec = do
     it "throws an exception if key contains '='" $ do
       setEnv "some=key" "foo" `shouldThrow` (== InvalidArgument) . ioeGetErrorType
 
-    it "works for arbitrary keys" $ property $ \k -> ('\NUL' `notElem` k && '=' `notElem` k && (not . null) k) ==> morallyDubiousIOProperty $ do
-      setEnv k "foo"
-      r <- getEnv k
-      return (r == "foo")
+    it "works for arbitrary keys" $
+      property $ \k -> ('\NUL' `notElem` k && '=' `notElem` k && (not . null) k) ==> do
+        setEnv k "foo"
+        getEnv k `shouldReturn` "foo"
