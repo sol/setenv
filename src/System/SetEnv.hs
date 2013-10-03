@@ -93,7 +93,7 @@ foreign import WINDOWS_CCONV unsafe "windows.h SetEnvironmentVariableW"
 setEnv_ k v = Posix.setEnv k v True
 #endif
 
--- | @unSet name@ removes the specified environment variable from the
+-- | @unsetEnv name@ removes the specified environment variable from the
 -- environment of the current process.
 --
 -- Throws `Control.Exception.IOException` if @name@ is the empty string or
