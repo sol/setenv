@@ -45,5 +45,3 @@ test-suite spec
   build-depends:
       base
     , process
-    , hspec >= 1.5
-    , QuickCheck
