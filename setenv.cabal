@@ -35,9 +35,15 @@ test-suite spec
   hs-source-dirs:
       test
   main-is:
-      Spec.hs
+      -- NOTE: We can not use Spec.hs here, because hspec depends on setenv.
+      -- So we can not depend on our inplace version of setenv here.  Just
+      -- including src in hs-source-dirs does also not work, because this would
+      -- require a condition for unix in the test-suite section, and older
+      -- version of cabal-install failed if any package in the dependency chain
+      -- uses a condition in a test-suite section.
+      run.lhs
   build-depends:
       base
-    , setenv
-    , hspec >= 1.3
+    , process
+    , hspec >= 1.5
     , QuickCheck
