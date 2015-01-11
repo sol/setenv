@@ -8,6 +8,11 @@ maintainer:       Simon Hengel <sol@typeful.net>
 category:         System
 synopsis:         A cross-platform library for setting environment variables
 description:      A cross-platform library for setting environment variables
+                  .
+                  Note: Since @base- 4.7.0.0@ the functions @setEnv@ and
+                  @unsetEnv@ are provided by @System.Environment@.
+                  @System.SetEnv@ merily re-exports those functions when built
+                  with @base >= 4.7@.
 build-type:       Simple
 cabal-version:    >= 1.8
 
