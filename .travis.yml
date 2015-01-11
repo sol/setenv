@@ -1,5 +1,6 @@
 language: haskell
 
 script:
-  - cabal install
-  - ./test/run.lhs
+  - cabal configure --enable-tests --ghc-options=-Werror && cabal build && cabal test
+  - cabal install hspec
+  - runhaskell -itest -isrc -optP-include -optPdist/build/autogen/cabal_macros.h test/Spec.hs

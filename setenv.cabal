@@ -26,22 +26,3 @@ library
       base == 4.*
   if !os(windows)
     build-depends: unix
-
-test-suite spec
-  type:
-      exitcode-stdio-1.0
-  ghc-options:
-      -Wall -Werror
-  hs-source-dirs:
-      test
-  main-is:
-      -- NOTE: We can not use Spec.hs here, because hspec depends on setenv.
-      -- So we can not depend on our inplace version of setenv here.  Just
-      -- including src in hs-source-dirs does also not work, because this would
-      -- require a condition for unix in the test-suite section, and older
-      -- version of cabal-install failed if any package in the dependency chain
-      -- uses a condition in a test-suite section.
-      run.lhs
-  build-depends:
-      base
-    , process
