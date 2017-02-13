@@ -57,7 +57,7 @@ eRROR_ENVVAR_NOT_FOUND = 203
 -- package instead.
 --
 -- Throws `Control.Exception.IOException` if @name@ is the empty string or
--- contains an equal sign.
+-- contains an equals sign.
 setEnv :: String -> String -> IO ()
 setEnv key value_
   | null value = unsetEnv key
