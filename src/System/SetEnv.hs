@@ -64,7 +64,7 @@ setEnv key value_
   | otherwise  = setEnv_ key value
   where
     -- NOTE: Anything that follows NUL is ignored on both POSIX and Windows.
-    -- We still strip it manually so that the null check above succeds if a
+    -- We still strip it manually so that the null check above succeeds if a
     -- value starts with NUL, and `unsetEnv` is called.  This is important for
     -- two reasons.
     --
